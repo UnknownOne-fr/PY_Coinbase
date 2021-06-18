@@ -28,14 +28,9 @@ client = Client(api_key, api_secret)
 # New Coinbase variables
 currencies_list = coinbase_functions.key
 
-# Load account balance
-'''
-Il faudra créer un dictionnaire pour stocker les valeurs du portefeuille et un autre pour celles non détenues
-'''
 
 # Load specific user : here TDE
 user = client.update_current_user(name=config_user.user_settings.get("name"))
-
 
 
 total = 0
