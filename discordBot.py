@@ -8,7 +8,7 @@ from coinbase.wallet.client import Client
 from dotenv import load_dotenv
 
 # qqch dans les parenthèses de laod_dotenv() car le fichier s'appelle pas '.env' comme c'est le cas
-# par défaut car ici c'est le nom de l'env virtuel donc on l'appelle config (il comprend que le fichier
+# par défaut car ici c'est le nom de l'env virtuel donc on l'appelle config. il comprend que le fichier
 # est dans le fichier courant -> permet de pas déployer le fichier config sur git et donner l'accès au bot
 load_dotenv(dotenv_path="config")
 
@@ -63,7 +63,7 @@ async def on_message(message):
 # Define a client action on Discord : new channel member
 @client.event
 async def on_member_join(member):
-    general_channel: discord.TextChannel = client.get_channel(850376716933267498)
+    general_channel: discord.TextChannel = client.get_channel(discrod__channel__id) # replace discord__channel__id by the id
     await general_channel.send(content=f"Bienvenue sur le serveur {member.display_name} !")
 
 
