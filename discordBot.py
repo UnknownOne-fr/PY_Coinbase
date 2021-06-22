@@ -77,7 +77,7 @@ async def on_message(message):
 # Define a client action on Discord : new channel member
 @client.event
 async def on_member_join(member):
-    general_channel: discord.TextChannel = client.get_channel(850376716933267498)
+    general_channel: discord.TextChannel = client.get_channel('XXXXXXXXXXXXXX') # replace 'XXXXXXXXXXXXXX' by channel id
     await general_channel.send(content=f"Bienvenue sur le serveur {member.display_name} !")
 
 
