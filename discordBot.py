@@ -4,11 +4,12 @@ import discord
 import config_api
 import coinbase_functions
 
+from coinbase_functions import user_name_coinbase, part_wallet_content, full_wallet_content
 from coinbase.wallet.client import Client
 from dotenv import load_dotenv
 
 # qqch dans les parenthèses de laod_dotenv() car le fichier s'appelle pas '.env' comme c'est le cas
-# par défaut car ici c'est le nom de l'env virtuel donc on l'appelle config. il comprend que le fichier
+# par défaut car ici c'est le nom de l'env virtuel donc on l'appelle config (il comprend que le fichier
 # est dans le fichier courant -> permet de pas déployer le fichier config sur git et donner l'accès au bot
 load_dotenv(dotenv_path="config")
 
@@ -43,27 +44,40 @@ async def on_message(message):
     # Show the list of key from dictionary
     if message.content.startswith("!key"):
         await message.channel.send("Liste des cryptos disponibles actuellement :")
-        for keywords in coinbase_functions.key:
-            await message.channel.send(keywords)
+        for keywords in sorted(coinbase_functions.key):
+            await message.channel.send(f"\t- {keywords.capitalize()}")
 
     # Show all currencies with last sell price
     if message.content.startswith("!all"):
         await message.channel.send("Résumé de la valeur de toutes les cryptos disponibles :")
-        for keywords in coinbase_functions.key:
+        for keywords in sorted(coinbase_functions.key):
             await message.channel.send(
-                f"{keywords.capitalize()} ({coinbase_functions.liste_crypto_coinbase[keywords]}) : {coinbase_functions.spot_price_coinbase(keywords)} €")
+                f"{keywords.capitalize()} ({coinbase_functions.liste_crypto_coinbase[keywords]}) "
+                f": {coinbase_functions.spot_price_coinbase(keywords)} €")
 
-    # show unique currency with las sell price
-    for keywords in coinbase_functions.key:
-        if message.content.startswith(f">{keywords}"):
+    # Show unique currency with las sell price
+    for keywords in sorted(coinbase_functions.key):
+        if message.content.startswith(f">{keywords.lower()}_price"):
             await message.channel.send(
-                f"Cours actuel du {keywords.capitalize()} ({coinbase_functions.liste_crypto_coinbase[keywords]}) : {coinbase_functions.spot_price_coinbase(keywords)} €")
+                f"Cours actuel du {keywords.capitalize()} ({coinbase_functions.liste_crypto_coinbase[keywords]}) "
+                f": {coinbase_functions.spot_price_coinbase(keywords)} €")
+
+    # Show part wallet content for a customer
+    for keywords in sorted(coinbase_functions.key):
+        if message.content.startswith(f">{keywords.lower()}_wallet"):  # {user_name_coinbase.lower()}
+            for elements in part_wallet_content(keywords):
+                await message.channel.send(f"\t{elements}")
+
+    # Show full wallet content for a customer
+    if message.content.startswith(f"!full_wallet"):  # {user_name_coinbase.lower()}
+        for elements in full_wallet_content(user_name_coinbase):
+            await message.channel.send(elements)
 
 
 # Define a client action on Discord : new channel member
 @client.event
 async def on_member_join(member):
-    general_channel: discord.TextChannel = client.get_channel(discrod__channel__id) # replace discord__channel__id by the id
+    general_channel: discord.TextChannel = client.get_channel(850376716933267498)
     await general_channel.send(content=f"Bienvenue sur le serveur {member.display_name} !")
 
 
